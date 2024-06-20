@@ -1,16 +1,23 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+from database import DatabaseManager
+from models.binary_search_tree import BinarySearchTree
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+def main():
+    print("Hello, World!")
+    db = DatabaseManager("library.sqlite")
+    borrowables = db.get_borrowables()
+    library_tree_title = BinarySearchTree("title")
+    # library_tree_year = BinarySearchTree("year_published")
+    for borrowable in borrowables:
+        library_tree_title.insert(borrowable)
+        # library_tree_year.insert(borrowable)
+
+    print(library_tree_title)
+    library_tree_title.print_tree()
+    # print(library_tree_year)
+    print(library_tree_title.search("Becoming"))
+    # print(library_tree_year.search(2024))
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    main()

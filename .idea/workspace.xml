@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="926d0570-04d6-466a-bd56-21cba66d9415" name="Changes" comment="">
+    <list default="true" id="926d0570-04d6-466a-bd56-21cba66d9415" name="Changes" comment="init">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/library.sqlite" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mock_data/audio_books.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mock_data/books.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mock_data/periodicals.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/author.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/binary_search_tree.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/borrowables/audio_book.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/borrowables/book.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/borrowables/borrowable.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/borrowables/magazine.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/borrowables/periodical.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/borrower_list.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/double_linked_list.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/library_tree.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/users/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/users/borrower.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/users/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -9,26 +33,59 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2hUr93kF9ZXGkn9BqtqdOPU8Ybh" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.main.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/akp/PycharmProjects/sola",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/mock_data" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/models/borrowables" />
+      <recent name="$PROJECT_DIR$/models/users" />
+      <recent name="$PROJECT_DIR$/models" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="sola" />
@@ -70,19 +127,75 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1717659342791</updated>
-      <workItem from="1717659350142" duration="2000" />
+      <workItem from="1717659350142" duration="226000" />
+      <workItem from="1718099117120" duration="5303000" />
+      <workItem from="1718113237390" duration="3205000" />
+      <workItem from="1718265769400" duration="267000" />
+      <workItem from="1718266107709" duration="148000" />
+      <workItem from="1718266987000" duration="9638000" />
+      <workItem from="1718785603496" duration="18445000" />
     </task>
+    <task id="LOCAL-00001" summary="init">
+      <option name="closed" value="true" />
+      <created>1717659655307</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1717659655307</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="97d451b0-c38e-4610-aba4-1de485fa5f0f" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="97d451b0-c38e-4610-aba4-1de485fa5f0f">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init" />
+    <option name="LAST_COMMIT_MESSAGE" value="init" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/database.py</url>
+          <line>146</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/database.py</url>
+          <line>61</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="1" />
+          <line>15</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/sola$main.coverage" NAME="main Coverage Results" MODIFIED="1718823667312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
