@@ -1,9 +1,9 @@
-from user import User
+from models.users.user import User
 
 
 class Borrower(User):
-    def __init__(self, first_name, last_name, username, password, account_number):
-        super().__init__(first_name, last_name, username, password)
+    def __init__(self, username, password, first_name, last_name, account_number):
+        super().__init__(username, password, first_name, last_name)
         self._account_number = account_number
         self._rented_items = []
 

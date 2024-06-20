@@ -1,44 +1,34 @@
-from typing import Generic, TypeVar
-
-T = TypeVar('T')
+from models.library_tree.node import Node
 
 
-class Node:
-    def __init__(self, key, item):
-        self.key = key
-        self.items = [item]
-        self.left = None
-        self.right = None
-
-
-class BinarySearchTree:
-    def __init__(self, attribute):
+class LibraryTree:
+    def __init__(self, get_key):
         self.root = None
-        self.attribute = attribute
+        self._get_key = get_key
 
     def insert(self, item):
-        print(f"Inserting item with key {self._get_key(item)}")
-        if not self.root:
-            self.root = Node(self._get_key(item), item, )
-        else:
-            self._insert(self.root, item)
-
-    def _get_key(self, item):
-        return getattr(item, self.attribute)
-
-    def _insert(self, node, item):
         key = self._get_key(item)
+        print(f"Inserting item with key {key}")
+        if not self.root:
+            self.root = Node(key, item)
+        else:
+            self._insert(self.root, key, item)
+
+    # def _get_key(self, item):
+    #     return getattr(item, self.attribute)
+
+    def _insert(self, node, key, item):
         print(f"Inserting item with key {key} at node with key {node.key}")
         if key < node.key:
             if node.left is None:
                 node.left = Node(key, item)
             else:
-                self._insert(node.left, item)
+                self._insert(node.left, key, item)
         elif key > node.key:
             if node.right is None:
                 node.right = Node(key, item)
             else:
-                self._insert(node.right, item)
+                self._insert(node.right, key, item)
         else:
             node.items.append(item)
 
@@ -76,20 +66,27 @@ class BinarySearchTree:
         if node.left:
             self.print_tree(node.left, level + 1)
 
+    def get_all_nodes(self):
+        return self._get_all_nodes(self.root)
+
+    def _get_all_nodes(self, node):
+        if not node:
+            return []
+        return self._get_all_nodes(node.left) + [node] + self._get_all_nodes(node.right)
+
     def __str__(self):
         return self._in_order_traversal(self.root, "")
 
-
-class MultiSearchTree:
-    def __init__(self, attributes):
-        self.trees = {attribute: BinarySearchTree(attribute) for attribute in attributes}
-
-    def insert(self, item):
-        for tree in self.trees.values():
-            tree.insert(item)
-
-    def search(self, attribute, value):
-        if attribute in self.trees:
-            return self.trees[attribute].search(value)
-        else:
-            return None
+# class MultiSearchTree:
+#     def __init__(self, attributes):
+#         self.trees = {attribute: BinarySearchTree(attribute) for attribute in attributes}
+#
+#     def insert(self, item):
+#         for tree in self.trees.values():
+#             tree.insert(item)
+#
+#     def search(self, attribute, value):
+#         if attribute in self.trees:
+#             return self.trees[attribute].search(value)
+#         else:
+#             return None

@@ -1,6 +1,6 @@
-from user import User
+from models.users.user import User
 
 
-class Administrator(User):
+class Admin(User):
     def display_info(self):
         return f"Administrator: {self.first_name} {self.last_name}"

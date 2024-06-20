@@ -1,5 +1,5 @@
-from double_linked_list import DoubleLinkedList
-from users.borrower import Borrower
+from models.double_linked_list import DoubleLinkedList
+from models.users.borrower import Borrower
 
 
 class BorrowerList(DoubleLinkedList[Borrower]):

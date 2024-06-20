@@ -10,7 +10,7 @@ class Borrowable(ABC):
             title: str,
             category: str,
             language: str,
-            authors: List[Author],
+            authors: List[str],
             year_published: int,
     ):
         self.title = title
