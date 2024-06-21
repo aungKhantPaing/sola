@@ -105,6 +105,30 @@ class DoubleLinkedList(Generic[T]):
 
         self.size += 1
 
+    def remove(self, position):
+        node_to_remove = self.at(position)
+        if node_to_remove is None:
+            return None
+        else:
+            if node_to_remove.prev is not None:
+                node_to_remove.prev.next = node_to_remove.next
+            else:
+                self.head = node_to_remove.next
+
+            if node_to_remove.next is not None:
+                node_to_remove.next.prev = node_to_remove.prev
+            else:
+                self.tail = node_to_remove.prev
+
+            self.size -= 1
+            return node_to_remove
+
+    def __iter__(self):
+        current_node = self.head
+        while current_node is not None:
+            yield current_node.data
+            current_node = current_node.next
+
     def __str__(self):
         current_node = self.head
         return_str = f's{self.size} h{self.head} t{self.tail}:'

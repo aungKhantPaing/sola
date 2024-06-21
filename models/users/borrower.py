@@ -31,3 +31,5 @@ class Borrower(User):
 
     def display_info(self):
         return f"Borrower: {self.first_name} {self.last_name}, Account Number: {self._account_number}"
+
+    __str__ = display_info

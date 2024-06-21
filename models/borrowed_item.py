@@ -11,18 +11,18 @@ class BorrowedItem:
     def __init__(self, _id, borrowable_id: str, borrower_account_number: str, borrowed_date: str,
                  due_date: str = None,
                  return_date: str = None,
-                 fine_paid: bool = False):
+                 fine_paid: int = 0):
         self.id = _id
         self.borrowable_id = borrowable_id
         self.borrower_account_number = borrower_account_number
         self.borrowed_date = get_datetime(borrowed_date)
         self.due_date = get_datetime(due_date) if due_date is not None else self.borrowed_date + timedelta(days=7)
         self.return_date = get_datetime(return_date) if return_date is not None else None
-        self._fine_paid = fine_paid
+        self._fine_paid = True if fine_paid == 1 else False
 
 
     @property
-    def fine_paid(self):
+    def fine_paid(self) -> bool:
         return self._fine_paid
 
     def get_fine(self):
