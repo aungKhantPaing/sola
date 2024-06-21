@@ -1,6 +1,6 @@
 import csv
 import sqlite3
-
+from datetime import datetime
 from models.borrowables.audio_book import AudioBook
 from models.borrowables.book import Book
 from models.borrowables.borrowable import Borrowable
@@ -52,56 +52,48 @@ class DatabaseManager:
                 borrowed_date TEXT,
                 due_date TEXT,
                 return_date TEXT,
+                fine_paid BOOLEAN DEFAULT FALSE,
                 FOREIGN KEY (borrowable_id) REFERENCES borrowables(id),
                 FOREIGN KEY (borrower_account_number) REFERENCES users(id)
             )
         ''')
         self.conn.commit()
 
-    def insert_books(self, books):
-        for book in books:
-            self.cursor.execute('''
-                    INSERT INTO borrowables (type, title, category, language, authors, year_published, isbn)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                'Book', book.title, book.category, book.language, ', '.join(book.authors), book.year_published,
-                book.isbn))
+    def insert_book(self, title, category, language, authors, year_published, isbn):
+        self.cursor.execute('''
+            INSERT INTO borrowables (type, title, category, language, authors, year_published, isbn)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', ('Book', title, category, language, authors, year_published, isbn))
         self.conn.commit()
 
-    def insert_audio_books(self, audio_books):
-        for audio_book in audio_books:
-            self.cursor.execute('''
-                    INSERT INTO borrowables (type, title, category, language, authors, year_published, isbn, audio_format)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                'AudioBook', audio_book.title, audio_book.category, audio_book.language, ', '.join(audio_book.authors),
-                audio_book.year_published, audio_book.isbn, audio_book.audio_format))
+    def insert_audio_book(self, title, category, language, authors, year_published, isbn, audio_format):
+        self.cursor.execute('''
+             INSERT INTO borrowables (type, title, category, language, authors, year_published, isbn, audio_format)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+         ''', ('AudioBook', title, category, language, authors, year_published, isbn, audio_format))
         self.conn.commit()
 
-    def insert_periodicals(self, periodicals):
-        for periodical in periodicals:
-            self.cursor.execute('''
-                    INSERT INTO borrowables (type, title, category, language, authors, year_published)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (
-                'Periodical', periodical.title, periodical.category, periodical.language, ', '.join(periodical.authors),
-                periodical.year_published))
+    def insert_periodical(self, title, category, language, authors, year_published):
+        self.cursor.execute('''
+            INSERT INTO borrowables (type, title, category, language, authors, year_published)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', ('Periodical', title, category, language, authors, year_published))
         self.conn.commit()
 
     def get_books(self):
         self.cursor.execute('SELECT * FROM borrowables WHERE type = "Book"')
         rows = self.cursor.fetchall()
-        return [Book(row[2], row[3], row[4], row[5].split(', '), row[6], row[7]) for row in rows]
+        return [Book(row[0], row[2], row[3], row[4], row[5].split(', '), row[6], row[7]) for row in rows]
 
     def get_audio_books(self):
         self.cursor.execute('SELECT * FROM borrowables WHERE type = "AudioBook"')
         rows = self.cursor.fetchall()
-        return [AudioBook(row[2], row[3], row[4], row[5].split(', '), row[6], row[7], row[8]) for row in rows]
+        return [AudioBook(row[0], row[2], row[3], row[4], row[5].split(', '), row[6], row[7], row[8]) for row in rows]
 
     def get_periodicals(self):
         self.cursor.execute('SELECT * FROM borrowables WHERE type = "Periodical"')
         rows = self.cursor.fetchall()
-        return [Periodical(row[2], row[3], row[4], row[5].split(', '), row[6]) for row in rows]
+        return [Periodical(row[0], row[2], row[3], row[4], row[5].split(', '), row[6]) for row in rows]
 
     def get_borrowables(self) -> list[Borrowable]:
         return self.get_books() + self.get_audio_books() + self.get_periodicals()
@@ -114,7 +106,7 @@ class DatabaseManager:
     def get_borrowed_items(self):
         self.cursor.execute('SELECT * FROM borrowed_items')
         rows = self.cursor.fetchall()
-        return [BorrowedItem(row[1], row[2], row[3], row[4], row[5], row[6]) for row in rows]
+        return [BorrowedItem(row[0], row[1], row[2], row[3], row[4], row[5], row[6]) for row in rows]
 
     def insert_borrower(self, username, password, first_name, last_name):
         self.cursor.execute('''
@@ -123,7 +115,8 @@ class DatabaseManager:
         ''', ('Borrower', username, password, first_name, last_name))
         self.conn.commit()
 
-    def insert_borrowed_item(self, borrowable_id, borrower_account_number, borrowed_date, due_date, return_date):
+    def insert_borrowed_item(self, borrowable_id, borrower_account_number, borrowed_date, due_date=None,
+                             return_date=None):
         self.cursor.execute('''
             INSERT INTO borrowed_items (borrowable_id, borrower_account_number, borrowed_date, due_date, return_date)
             VALUES (?, ?, ?, ?, ?)
@@ -139,17 +132,18 @@ class DatabaseManager:
         row = self.cursor.fetchone()
 
         # Create a BorrowedItem object from the fetched row
-        return BorrowedItem(row[1], row[2], row[3], row[4], row[5], row[6])
+        return BorrowedItem(row[0], row[1], row[2], row[3], row[4], row[5])
 
     def update_borrowed_item(self, borrowed_item: BorrowedItem):
         self.cursor.execute('''
             UPDATE borrowed_items
             SET borrowed_date = ?,
                 due_date = ?,
-                return_date = ?
+                return_date = ?,
+                fine_paid = ?
             WHERE id = ?
         ''', (
-            borrowed_item.borrowed_date, borrowed_item.due_date, borrowed_item.return_date, borrowed_item.id,))
+            borrowed_item.borrowed_date, borrowed_item.due_date, borrowed_item.return_date, borrowed_item.fine_paid, borrowed_item.id,))
         self.conn.commit()
 
     def update_borrower(self, borrower: Borrower):
@@ -189,24 +183,15 @@ class DatabaseManager:
         with open(csv_file_path, 'r') as file:
             reader = csv.reader(file)
             next(reader)  # Skip the header row
-            borrowables = []
             for row in reader:
                 title, category, language, authors, year_published, isbn, audio_format = row
-                authors = authors.split(', ')
                 year_published = int(year_published) if year_published else None
                 if borrowable_type == 'Book':
-                    borrowable = Book(title, category, language, authors, year_published, isbn)
+                    self.insert_book(title, category, language, authors, year_published, isbn)
                 elif borrowable_type == 'AudioBook':
-                    borrowable = AudioBook(title, category, language, authors, year_published, isbn, audio_format)
+                    self.insert_audio_book(title, category, language, authors, year_published, isbn, audio_format)
                 elif borrowable_type == 'Periodical':
-                    borrowable = Periodical(title, category, language, authors, year_published)
-                borrowables.append(borrowable)
-            if borrowable_type == 'Book':
-                self.insert_books(borrowables)
-            elif borrowable_type == 'AudioBook':
-                self.insert_audio_books(borrowables)
-            elif borrowable_type == 'Periodical':
-                self.insert_periodicals(borrowables)
+                    self.insert_periodical(title, category, language, authors, year_published)
         self.conn.commit()
 
 

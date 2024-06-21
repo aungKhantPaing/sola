@@ -1,5 +1,8 @@
+from datetime import datetime
 from getpass import getpass
 from database import DatabaseManager
+from models.borrowed_item import BorrowedItem
+from models.borrowed_item_list import BorrowedItemList
 from models.library_tree.library_tree import LibraryTree
 from models.library_tree.multi_key_library_tree import MultiKeyLibraryTree
 from models.users.admin import Admin
@@ -26,63 +29,77 @@ def view_borrowables(library_tree_title):
     library_tree_title.print_tree()
 
 
-def borrow_item(user, library_tree_title):
-    title = input("Enter the title of the item you want to borrow: ")
-    item = library_tree_title.search(title)
-    if item:
-        user.rent_item(item)
-        print(f"You have successfully borrowed {title}")
-    else:
-        print("Item not found. Please try again.")
-
-
 def paginate(items, page, page_size):
     start = (page - 1) * page_size
     end = start + page_size
     return items[start:end]
 
 
-def view_borrowables_paginated(library_tree_title, page, page_size):
-    items = library_tree_title.items  # Assuming that the tree has an 'items' property that returns a list of all items
-    items_on_page = paginate(items, page, page_size)
-    for item in items_on_page:
-        print(item.title)  # Assuming that the item has a 'title' property
+def view_borrowables_paginated(items, page_size=10):
+    total_pages = len(items) // page_size + (len(items) % page_size > 0)
+    items_on_page = paginate(items, 1, page_size)
+    for i, item in enumerate(items_on_page, start=1):
+        print(f"{(1 - 1) * page_size + i}. {item}")
+
+    while True:
+        print(f"Total pages: {total_pages}")
+        page = int(input("Enter page number (or 0 to go back): "))
+        if page == 0:
+            break
+        elif 1 <= page <= total_pages:
+            items_on_page = paginate(items, page, page_size)
+            for i, item in enumerate(items_on_page, start=1):
+                print(f"{(page - 1) * page_size + i}. {item}")
+        else:
+            print("Invalid page number. Please try again.")
 
 
-def view_borrowed_items(user):
+def view_borrowed_items(user, borrowed_items: BorrowedItemList):
     print("Borrowed items:")
-    for item in user.rented_items:
-        print(item.title)  # Assuming that the item has a 'title' property
+    user_borrowed_items = borrowed_items.search_unreturned_items(user.account_number)
+    if not user_borrowed_items:
+        print("No items borrowed.")
+        return
+    for i, item in enumerate(user_borrowed_items, start=1):
+        print(f"{i}. {item}")
 
 
-def search_borrowables_by_title(library_tree_title, title):
-    items = library_tree_title.search(title)
-    if items:
-        print(f"Found items with title: {title}")
-        for item in items:
-            print(item)  # Assuming that the item has a 'title' property
+def return_selected_item(user, item, borrowed_items, db: DatabaseManager):
+    confirmation = input(f"Do you want to return {item}? (yes/no): ")
+    if confirmation.lower() == 'yes':
+        item.return_date = datetime.now()
+        db.update_borrowed_item(item)
+        print(f"You have successfully returned {item.borrowable_id}")
     else:
-        print("No items found with that title.")
+        print("You chose not to return the item.")
 
 
-def search_borrowables_by_year(library_tree_year, year):
-    items = library_tree_year.search(year)
-    if items:
-        print(f"Found items from that year: {year} ")
-        for item in items:
-            print(item)  # Assuming that the item has a 'title' property
+def search_item(library_trees, attribute, value):
+    if attribute not in library_trees:
+        print("Invalid attribute. Please try again.")
+        return None
     else:
-        print("No items found from that year.")
+        return library_trees[attribute].search(value)
 
 
-def search_borrowables_by_author(library_tree_author, author):
-    items = library_tree_author.search(author)
-    if items:
-        print(f"Found items by author: {author}")
-        for item in items:
-            print(item)  # Assuming that the item has a 'title' property
+def borrow_selected_item(user, item, borrowed_items, db: DatabaseManager):
+    if borrowed_items.is_item_borrowed(item.id):
+        print("This item is already borrowed.")
+        return
+    confirmation = input(f"Do you want to borrow {item.title}? (yes/no): ")
+    if confirmation.lower() == 'yes':
+        if user.has_reached_borrow_limit(borrowed_items):
+            print("You have reached the maximum number of borrowed items.")
+            return
+        elif user.has_unpaid_fines(borrowed_items):
+            print("You have unpaid fines. Please pay your fines first.")
+            return
+        else:
+            borrowed_item = db.insert_borrowed_item(item.id, user.account_number, datetime.now())
+            borrowed_items.append(borrowed_item)
+            print(f"You have successfully borrowed {item.title}")
     else:
-        print("No items found by that author.")
+        print("You chose not to borrow the item.")
 
 
 def main():
@@ -95,45 +112,80 @@ def main():
         borrower_list.append(borrower)
 
     borrowables = db.get_borrowables()
-    library_tree_title = LibraryTree(lambda item: item.title)
-    library_tree_year = LibraryTree(lambda item: item.year_published)
-    library_tree_author = MultiKeyLibraryTree(lambda item: item.authors)
+    library_trees = {
+        'title': LibraryTree(lambda item: item.title),
+        'category': LibraryTree(lambda item: item.category),
+        'language': LibraryTree(lambda item: item.language),
+        'year_published': LibraryTree(lambda item: str(item.year_published)),
+        'author': MultiKeyLibraryTree(lambda item: item.authors)
+    }
     for borrowable in borrowables:
-        library_tree_title.insert(borrowable)
-        library_tree_year.insert(borrowable)
-        library_tree_author.insert(borrowable)
+        library_trees['title'].insert(borrowable)
+        library_trees['category'].insert(borrowable)
+        library_trees['language'].insert(borrowable)
+        library_trees['year_published'].insert(borrowable)
+        library_trees['author'].insert(borrowable)
+
+    borrowed_items = BorrowedItemList()
+    for borrowed_item in db.get_borrowed_items():
+        borrowed_items.append(borrowed_item)
 
     user = None
     while not user:
         user = login(borrower_list)
 
     while True:
+        print()
         print("1. View borrowable items")
         print("2. Borrow an item")
         print("3. View borrowed items")
-        print("4. Search items by title")
-        print("5. Search items by year")
-        print("6. Search items by author")
-        print("7. Exit")
+        print("4. Search items")
+        print("5. View and pay fines")
+        print("6. Exit")
         option = input("Please enter your choice: ")
         if option == '1':
-            page = int(input("Enter page number: "))
-            page_size = int(input("Enter page size: "))
-            view_borrowables_paginated(library_tree_title, page, page_size)
+            view_borrowables_paginated(borrowables)
         elif option == '2':
-            borrow_item(user, library_tree_title)
+            print('WIP')
         elif option == '3':
-            view_borrowed_items(user)
+            user_borrowed_items = borrowed_items.search_unreturned_items(user.account_number)
+            if user_borrowed_items:
+                print(f"You have {len(user_borrowed_items)} borrowed items.")
+                for i, item in enumerate(user_borrowed_items, start=1):
+                    print(f"{i}. {item}")
+                item_number = int(input("Enter the number of the item you want to return: "))
+                selected_item = user_borrowed_items[item_number - 1]
+                return_selected_item(user, selected_item, borrowed_items, db)
+            else:
+                print("You have no borrowed items.")
         elif option == '4':
-            title = input("Enter title to search: ")
-            search_borrowables_by_title(library_tree_title, title)
+            attribute = input("Enter attribute to search (title, category, language, year_published, author): ")
+            value = input("Enter value to search: ")
+            items = search_item(library_trees, attribute, value)
+            if items:
+                print(f"Found {len(items)} items with {attribute}: {value}")
+                for i, item in enumerate(items, start=1):
+                    print(f"{i}. {item}")
+                item_number = int(input("Enter the number of the item you want to view in detail: "))
+                selected_item = items[item_number - 1]
+                print(selected_item.get_detail())
+                borrow_selected_item(user, selected_item, borrowed_items, db)
+            else:
+                print("No items found with that attribute and value.")
         elif option == '5':
-            year = int(input("Enter year to search: "))
-            search_borrowables_by_year(library_tree_year, year)
+            unpaid_fines = user.get_unpaid_fines(borrowed_items)
+            if unpaid_fines:
+                print(f"You have {len(unpaid_fines)} unpaid fines.")
+                for i, item in enumerate(unpaid_fines, start=1):
+                    print(f"{i}. {item}")
+                item_number = int(input("Enter the number of the fine you want to pay: "))
+                selected_item = unpaid_fines[item_number - 1]
+                selected_item.pay_fine()
+                db.update_borrowed_item(selected_item)
+                print(f"You have successfully paid the fine for {selected_item.borrowable_id}")
+            else:
+                print("You have no unpaid fines.")
         elif option == '6':
-            author = input("Enter author to search: ")
-            search_borrowables_by_author(library_tree_author, author)
-        elif option == '7':
             break
         else:
             print("Invalid option. Please try again.")
