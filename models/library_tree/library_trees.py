@@ -1,3 +1,4 @@
+from models.borrowables.borrowable import Borrowable
 from models.library_tree.library_tree import LibraryTree
 from models.library_tree.multi_key_library_tree import MultiKeyLibraryTree
 
@@ -9,7 +10,7 @@ class LibraryTrees:
     def search(self, key, value):
         return self.library_trees[key].search(value)
 
-    def insert(self, borrowable):
+    def insert(self, borrowable: Borrowable):
         for key, library_tree in self.library_trees.items():
             library_tree.insert(borrowable)
 

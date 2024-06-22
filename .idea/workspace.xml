@@ -4,17 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="926d0570-04d6-466a-bd56-21cba66d9415" name="Changes" comment="Complete borrower interface">
-      <change afterPath="$PROJECT_DIR$/models/library_tree/library_trees.py" afterDir="false" />
+    <list default="true" id="926d0570-04d6-466a-bd56-21cba66d9415" name="Changes" comment="Add admin features">
+      <change afterPath="$PROJECT_DIR$/library_copy.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/library.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/library.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/borrowed_item.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/borrowed_item.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/borrower_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/borrower_list.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/double_linked_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/double_linked_list.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/library_tree/library_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/library_tree/library_tree.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/users/borrower.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/users/borrower.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/library_tree/library_trees.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/library_tree/library_trees.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,27 +38,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ToolWindowGitHub Copilot Chat.ShowToolbar": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/akp/PycharmProjects/sola",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ToolWindowGitHub Copilot Chat.ShowToolbar&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/akp/PycharmProjects/sola&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "sqlite"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlite&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -125,7 +122,9 @@
       <workItem from="1718785603496" duration="31266000" />
       <workItem from="1718876618522" duration="28973000" />
       <workItem from="1718938401413" duration="3646000" />
-      <workItem from="1718945760550" duration="7648000" />
+      <workItem from="1718945760550" duration="9410000" />
+      <workItem from="1718956316289" duration="441000" />
+      <workItem from="1718957001975" duration="2321000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <option name="closed" value="true" />
@@ -159,7 +158,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718940149920</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add admin features">
+      <option name="closed" value="true" />
+      <created>1718954368246</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1718954368246</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -190,7 +197,8 @@
     <MESSAGE value="init" />
     <MESSAGE value="Add multi_key_library_tree and update database" />
     <MESSAGE value="Complete borrower interface" />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete borrower interface" />
+    <MESSAGE value="Add admin features" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add admin features" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -204,6 +212,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/sola$main.coverage" NAME="main Coverage Results" MODIFIED="1718954184370" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sola$main.coverage" NAME="main Coverage Results" MODIFIED="1718958402331" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

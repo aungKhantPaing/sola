@@ -1,11 +1,8 @@
 from datetime import datetime
 from getpass import getpass
 from database import DatabaseManager
-from models.borrowed_item import BorrowedItem
 from models.borrowed_item_list import BorrowedItemList
-from models.library_tree.library_tree import LibraryTree
 from models.library_tree.library_trees import LibraryTrees
-from models.library_tree.multi_key_library_tree import MultiKeyLibraryTree
 from models.users.admin import Admin
 from models.users.borrower import Borrower
 from models.borrower_list import BorrowerList
@@ -168,6 +165,7 @@ def remove_borrower(db: DatabaseManager, borrower_list: BorrowerList):
 def admin_interface(user: Admin, library_trees, borrowed_items, borrower_list, db: DatabaseManager, borrowables):
     while True:
         print()
+        print("--- Admin Main Menu ---")
         print("1. Search for items")
         print("2. View borrowable items")
         print("3. Add or remove items")
@@ -232,29 +230,16 @@ def admin_interface(user: Admin, library_trees, borrowed_items, borrower_list, d
 def borrower_interface(user: Borrower, library_trees, borrowed_items, db: DatabaseManager, borrowables):
     while True:
         print()
+        print("--- Borrower Main Menu ---")
         print("1. View borrowable items")
-        print("2. Borrow an item")
+        print("2. Search and borrow item")
         print("3. View borrowed items")
-        print("4. Search items")
-        print("5. View and pay fines")
+        print("4. View and pay fines")
         print("6. Exit")
         option = input("Please enter your choice: ")
         if option == '1':
             view_borrowables_paginated(borrowables)
         elif option == '2':
-            print('WIP')
-        elif option == '3':
-            user_borrowed_items = borrowed_items.search_unreturned_items(user.account_number)
-            if user_borrowed_items:
-                print(f"You have {len(user_borrowed_items)} borrowed items.")
-                for i, item in enumerate(user_borrowed_items, start=1):
-                    print(f"{i}. {item}")
-                item_number = int(input("Enter the number of the item you want to return: "))
-                selected_item = user_borrowed_items[item_number - 1]
-                return_selected_item(user, selected_item, borrowed_items, db)
-            else:
-                print("You have no borrowed items.")
-        elif option == '4':
             attribute = input("Enter attribute to search (title, category, language, year_published, author): ")
             value = input("Enter value to search: ")
             items = search_item(library_trees, attribute, value)
@@ -268,7 +253,18 @@ def borrower_interface(user: Borrower, library_trees, borrowed_items, db: Databa
                 borrow_selected_item(user, selected_item, borrowed_items, db)
             else:
                 print("No items found with that attribute and value.")
-        elif option == '5':
+        elif option == '3':
+            user_borrowed_items = borrowed_items.search_unreturned_items(user.account_number)
+            if user_borrowed_items:
+                print(f"You have {len(user_borrowed_items)} borrowed items.")
+                for i, item in enumerate(user_borrowed_items, start=1):
+                    print(f"{i}. {item}")
+                item_number = int(input("Enter the number of the item you want to return: "))
+                selected_item = user_borrowed_items[item_number - 1]
+                return_selected_item(user, selected_item, borrowed_items, db)
+            else:
+                print("You have no borrowed items.")
+        elif option == '4':
             unpaid_fines = user.get_unpaid_fines(borrowed_items)
             if unpaid_fines:
                 print(f"You have {len(unpaid_fines)} unpaid fines.")
@@ -281,7 +277,7 @@ def borrower_interface(user: Borrower, library_trees, borrowed_items, db: Databa
                 print(f"You have successfully paid the fine for {selected_item.borrowable_id}")
             else:
                 print("You have no unpaid fines.")
-        elif option == '6':
+        elif option == '5':
             break
         else:
             print("Invalid option. Please try again.")
@@ -290,7 +286,7 @@ def borrower_interface(user: Borrower, library_trees, borrowed_items, db: Databa
 def main():
     db = DatabaseManager("library.sqlite")
 
-    admin = Admin('admin', 'passw0rd', 'John', 'Doe')
+    # admin = Admin('admin', 'passw0rd', 'John', 'Doe')
     borrowers = db.get_borrowers()
     borrower_list = BorrowerList()
     for borrower in borrowers:
